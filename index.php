@@ -91,6 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
             box-shadow: var(--shadow);
             position: fixed;
             width: 100%;
+            height: 13%
             top: 0;
             z-index: 1000;
             transition: var(--transition);
@@ -308,31 +309,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            min-height: 80vh;
+            min-height: 100vh;
             padding-top: 80px;
             padding-left: 5%;
             padding-right: 5%;
             position: relative;
-            background-color: #f5f7fa;
+            overflow: hidden;
         }
         
+        #heroVideoBackground {
+            position: absolute;
+            top: 27%;
+            left: 50%;
+            width: auto;
+            height: auto;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            z-index: -2;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
         .hero-text {
             flex: 1;
             padding-right: 2rem;
-            color: var(--dark-color);
-        }
-        
-        .hero-image {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hero-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
+            color: white;
+            position: relative;
+            z-index: 0;
         }
         
         .hero-content h1 {
@@ -782,6 +794,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     </header>
 
     <section class="hero">
+        <video autoplay loop muted playsinline id="heroVideoBackground">
+            <source src="images/section.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="hero-overlay"></div>
         <div class="hero-text">
             <h1>Rent Your <span>Dream Car</span></h1>
             <p>Live the life of Luxury. Just rent a car of your wish from our vast collection. Enjoy every moment with your family and make memories that last a lifetime.</p>
@@ -789,9 +806,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                 <a href="available-cars.php" class="btn">EXPLORE CARS</a>
                 <a href="services.php" class="btn btn-outline">OUR SERVICES</a>
             </div>
-        </div>
-        <div class="hero-image">
-            <img src="https://source.unsplash.com/random/800x600/?luxury,car" alt="Luxury Car">
         </div>
     </section>
 

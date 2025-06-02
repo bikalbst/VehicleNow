@@ -15,6 +15,92 @@ $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+/**
+ * Calculates the dynamically adjusted price based on current time and day.
+ *
+ * @param float $base_price The original price of the car.
+ * @return float The adjusted price.
+ */
+function calculate_dynamic_price($base_price) {
+    // ----- Dynamic Pricing Algorithm Start -----
+    $adjusted_price = (float)$base_price;
+    // Get current day (1 for Monday through 7 for Sunday)
+    $current_day_of_week = (int)date('N');
+    // Get current hour (0 for midnight through 23 for 11 PM)
+    $current_hour = (int)date('G');
+
+    $weekend_surcharge_rate = 0.20; // 20% surcharge for weekends
+    $night_surcharge_rate = 0.10;   //  % surcharge for night hours (6 PM onwards)
+
+    // Check if it's a weekend (Saturday or Sunday)
+    $is_weekend = ($current_day_of_week == 6 || $current_day_of_week == 7);
+
+    // Check if it's night rate time (6 PM or 18:00 onwards)
+    $is_night_rate_time = ($current_hour >= 18);
+
+    if ($is_weekend) {
+        $adjusted_price += $base_price * $weekend_surcharge_rate;
+    }
+    if ($is_night_rate_time) {
+        $adjusted_price += $base_price * $night_surcharge_rate;
+    }
+    // ----- Dynamic Pricing Algorithm End -----
+    return $adjusted_price;
+}
+
+/**
+ * Sorts an array of associative arrays using the Quick Sort algorithm.
+ *
+ * @param array &$arr The array to sort (passed by reference).
+ * @param string $key The key to sort by (e.g., 'CAR_NAME', 'PRICE').
+ * @param string $order The sort order ('asc' or 'desc').
+ */
+function quickSort(array &$arr, string $key, string $order = 'asc'): void {
+    $len = count($arr);
+    if ($len <= 1) {
+        return;
+    }
+
+    $pivot_element = $arr[0]; // The whole element is the pivot
+    // If sorting by PRICE, use the ADJUSTED_PRICE for comparison, otherwise use the specified key.
+    $pivot_val_to_compare = ($key === 'PRICE') ? $pivot_element['ADJUSTED_PRICE'] : $pivot_element[$key];
+
+    $left = $right = [];
+
+    for ($i = 1; $i < $len; $i++) {
+        // If sorting by PRICE, use the ADJUSTED_PRICE for comparison, otherwise use the specified key.
+        $current_val_to_compare = ($key === 'PRICE') ? $arr[$i]['ADJUSTED_PRICE'] : $arr[$i][$key];
+        $comparison_result = 0;
+
+        // Handle numeric vs string comparison
+        if ($key === 'PRICE') { // Specifically for price, ensure numeric comparison (using adjusted price)
+            $comparison_result = (float)$current_val_to_compare - (float)$pivot_val_to_compare;
+        } else { // For other keys like CAR_NAME, use string comparison
+            $comparison_result = strcmp((string)$current_val_to_compare, (string)$pivot_val_to_compare);
+        }
+
+        if ($order === 'asc') {
+            if ($comparison_result < 0) {
+                $left[] = $arr[$i];
+            } else {
+                $right[] = $arr[$i];
+            }
+        } else { // desc
+            if ($comparison_result > 0) {
+                $left[] = $arr[$i];
+            } else {
+                $right[] = $arr[$i];
+            }
+        }
+    }
+
+    quickSort($left, $key, $order);
+    quickSort($right, $key, $order);
+
+    $arr = array_merge($left, [$pivot_element], $right);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -397,13 +483,56 @@ if ($conn->connect_error) {
         <h2 class="section-title">All Available Cars</h2>
         <p class="section-subtitle">Browse our full collection of available vehicles ready for your next adventure.</p>
         
+        <?php
+        // Fetch all car data into an array
+        $sql_all_cars = "SELECT * FROM cars WHERE AVAILABLE='Y'"; // ORDER BY removed
+        $cars_result_all = $conn->query($sql_all_cars);
+        $all_cars_data = [];
+        if ($cars_result_all && $cars_result_all->num_rows > 0) {
+            while ($car_item = $cars_result_all->fetch_assoc()) {
+                // Calculate and add the adjusted price for dynamic pricing
+                $car_item['ADJUSTED_PRICE'] = calculate_dynamic_price((float)$car_item['PRICE']);
+                $all_cars_data[] = $car_item;
+            }
+        }
+
+        // Determine sort key and order from GET parameters
+        $sort_key = $_GET['sort_by'] ?? 'CAR_NAME'; // Default sort by name
+        $sort_order = strtolower($_GET['order'] ?? 'asc');    // Default order ascending
+
+        // Validate sort_key and sort_order
+        $allowed_sort_keys = ['CAR_NAME', 'PRICE'];
+        if (!in_array($sort_key, $allowed_sort_keys)) {
+            $sort_key = 'CAR_NAME'; // Default to CAR_NAME if invalid key
+        }
+        if (!in_array($sort_order, ['asc', 'desc'])) {
+            $sort_order = 'asc'; // Default to ascending
+        }
+
+        // Sort the car data if available
+        if (!empty($all_cars_data)) {
+            // No need to cast PRICE here anymore, quickSort handles it
+            quickSort($all_cars_data, $sort_key, $sort_order);
+        }
+        ?>
+
+        <div class="sorting-controls" style="margin-bottom: 1.5rem; text-align: right; padding-right: 1%;">
+            <span style="margin-right: 10px; font-weight: 500;">Sort by:</span>
+            <a href="?sort_by=CAR_NAME&order=asc" style="margin-right: 8px; text-decoration: none; color: var(--primary-color); <?php if($sort_key === 'CAR_NAME' && $sort_order === 'asc') echo 'font-weight:bold; text-decoration:underline;'; ?>">Name (A-Z)</a> |
+            <a href="?sort_by=CAR_NAME&order=desc" style="margin-left: 8px; margin-right: 8px; text-decoration: none; color: var(--primary-color); <?php if($sort_key === 'CAR_NAME' && $sort_order === 'desc') echo 'font-weight:bold; text-decoration:underline;'; ?>">Name (Z-A)</a> |
+            <a href="?sort_by=PRICE&order=asc" style="margin-left: 8px; margin-right: 8px; text-decoration: none; color: var(--primary-color); <?php if($sort_key === 'PRICE' && $sort_order === 'asc') echo 'font-weight:bold; text-decoration:underline;'; ?>">Price (Low-High)</a> |
+            <a href="?sort_by=PRICE&order=desc" style="margin-left: 8px; text-decoration: none; color: var(--primary-color); <?php if($sort_key === 'PRICE' && $sort_order === 'desc') echo 'font-weight:bold; text-decoration:underline;'; ?>">Price (High-Low)</a>
+        </div>
+
         <div class="car-grid">
             <?php
-            $sql_all_cars = "SELECT * FROM cars WHERE AVAILABLE='Y' ORDER BY CAR_ID DESC";
-            $cars_result_all = $conn->query($sql_all_cars);
+            // $sql_all_cars = "SELECT * FROM cars WHERE AVAILABLE='Y' ORDER BY CAR_ID DESC"; // Original query
+            // $cars_result_all = $conn->query($sql_all_cars);
             
-            if ($cars_result_all && $cars_result_all->num_rows > 0) {
-                while ($car_item = $cars_result_all->fetch_assoc()) {
+            // if ($cars_result_all && $cars_result_all->num_rows > 0) { // Original check
+            //    while ($car_item = $cars_result_all->fetch_assoc()) { // Original loop
+            if (!empty($all_cars_data)) {
+                foreach ($all_cars_data as $car_item) { // Loop through the sorted array
             ?>
                 <div class="car-card">
                     <div class="car-img">
@@ -422,20 +551,18 @@ if ($conn->connect_error) {
                             </div>
                         </div>
                         <div class="car-price">
-                            रु <?php echo htmlspecialchars($car_item['PRICE']); ?>/- per day
+                            रु <?php echo htmlspecialchars(number_format($car_item['ADJUSTED_PRICE'], 2)); ?>/- per day
                         </div>
                         <a href="cardetails.php?id=<?php echo $car_item['CAR_ID']; ?>" class="car-btn">View Details</a>
                     </div>
                 </div>
             <?php 
-                } // End while loop
+                } // End foreach loop
             } else {
                 echo "<p class=\"section-subtitle\">No cars are currently available. Please check back later!</p>";
             }
-            // Close connection if it was opened just for this script, or ensure it's closed at the end of overall script execution.
-            // $conn->close(); // Commented out as $conn might be used by other includes if this were part of a larger templating system.
-            // For a standalone page like this, it's good to close it, but typically done after footer.
             ?>
+          
         </div>
     </section>
 

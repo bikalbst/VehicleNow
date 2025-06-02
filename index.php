@@ -347,18 +347,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
             z-index: 0;
         }
         
-        .hero-content h1 {
+        .hero-text h1 {
             font-size: 3.5rem;
             font-weight: 700;
-            line-height: 1.2;
+            line-height: 1.4;
             margin-bottom: 1.5rem;
         }
         
-        .hero-content h1 span {
+        .hero-headline-main {
+            font-size: 4.2rem;
+            display: block;
+            margin-bottom: 0.1em;
+            line-height: 1.2;
+        }
+
+        .hero-headline-accent {
+            font-size: 3rem;
+            color: var(--primary-color);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .hero-text h1 span:not(.hero-headline-main) {
             color: var(--primary-color);
         }
         
-        .hero-content p {
+        .hero-text p {
             font-size: 1.1rem;
             margin-bottom: 2rem;
             max-width: 600px;
@@ -800,8 +814,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
         </video>
         <div class="hero-overlay"></div>
         <div class="hero-text">
-            <h1>Rent Your <span>Dream Car</span></h1>
-            <p>Live the life of Luxury. Just rent a car of your wish from our vast collection. Enjoy every moment with your family and make memories that last a lifetime.</p>
+            <h1><span class="hero-headline-main">Unlock Your Journey.</span> <span class="hero-headline-accent">Drive the Experience.</span></h1>
+            <p>Discover the freedom of the open road with VehicleNow. From sleek sedans for city escapes to rugged SUVs for adventure, find the perfect vehicle for every occasion. Your next unforgettable trip starts here.</p>
             <div>
                 <a href="available-cars.php" class="btn">EXPLORE CARS</a>
                 <a href="services.php" class="btn btn-outline">OUR SERVICES</a>

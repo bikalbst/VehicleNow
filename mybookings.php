@@ -275,13 +275,21 @@ $bookingsResult = $conn->query($sql);
         }
         
         .booking-status {
-            margin-top: auto; /* Pushes status to the bottom of the card */
             padding: 0.5rem 1rem;
             border-radius: 4px;
-            display: inline-block; /* So it doesn't take full width */
+            display: inline-block;
             font-weight: 500;
             font-size: 0.9rem;
-            width: fit-content; /* Adjust width to content */
+            width: fit-content;
+        }
+        
+        .booking-footer-actions {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding-top: 1rem;
         }
         
         .status-confirmed {
@@ -340,6 +348,36 @@ $bookingsResult = $conn->query($sql);
             background-color: #2980b9;
         }
         
+        .booking-actions {
+        }
+
+        .booking-action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        .btn-cancel:hover {
+            background-color: #d48c0c; /* Darker warning */
+        }
+
+        .btn-delete-booking {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .btn-delete-booking:hover {
+            background-color: #c0392b; /* Darker accent */
+        }
+        
         @media (max-width: 768px) {
             .booking-card {
                 /* Already flex-direction: column, so this media query might not be needed for this property */
@@ -353,6 +391,17 @@ $bookingsResult = $conn->query($sql);
             .booking-detail {
                  flex: 1 0 100%; /* Full width on smaller screens */
             }
+        }
+
+        .user-message-success {
+            background-color: #d4edda; /* Light green */
+            color: #155724; /* Dark green */
+            border-color: #c3e6cb;
+        }
+        .user-message-error {
+            background-color: #f8d7da; /* Light red */
+            color: #721c24; /* Dark red */
+            border-color: #f5c6cb;
         }
     </style>
 </head>
@@ -394,6 +443,16 @@ $bookingsResult = $conn->query($sql);
         <div class="page-header">
             <h1>My Bookings</h1>
         </div>
+
+        <?php 
+        if (isset($_SESSION['message'])): 
+            $message = $_SESSION['message'];
+            unset($_SESSION['message']); // Clear the message after displaying
+        ?>
+            <div class="user-message user-message-<?php echo htmlspecialchars($message['type']); ?>" style="margin-bottom: 1.5rem; padding: 1rem; border-radius: 5px; border: 1px solid transparent;">
+                <?php echo htmlspecialchars($message['text']); ?>
+            </div>
+        <?php endif; ?>
         
         <div id="bookings-content"> <!-- Removed dashboard-content class -->
             <?php if ($bookingsResult->num_rows > 0): ?>
@@ -448,8 +507,26 @@ $bookingsResult = $conn->query($sql);
                                 }
                                 ?>
                                 
-                                <div class="booking-status <?php echo $statusClass; ?>">
-                                    <?php echo $booking['STATUS']; ?>
+                                <div class="booking-footer-actions">
+                                    <div class="booking-status <?php echo $statusClass; ?>">
+                                        <?php echo htmlspecialchars($booking['STATUS']); ?>
+                                    </div>
+
+                                    <div class="booking-actions">
+                                        <?php if ($booking['STATUS'] === 'Pending'): ?>
+                                            <a href="update_booking_status.php?book_id=<?php echo $booking['BOOK_ID']; ?>&action=cancel"
+                                               class="booking-action-btn btn-cancel"
+                                               onclick="return confirm('Are you sure you want to cancel this booking?');">
+                                                <i class="fas fa-times-circle"></i> Cancel Booking
+                                            </a>
+                                        <?php elseif ($booking['STATUS'] === 'Returned' || $booking['STATUS'] === 'Completed' || $booking['STATUS'] === 'Cancelled'): ?>
+                                            <a href="update_booking_status.php?book_id=<?php echo $booking['BOOK_ID']; ?>&action=delete"
+                                               class="booking-action-btn btn-delete-booking"
+                                               onclick="return confirm('Are you sure you want to delete this booking record? This action cannot be undone.');">
+                                                <i class="fas fa-trash-alt"></i> Delete Record
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2025 at 09:31 AM
+-- Generation Time: Jun 06, 2025 at 07:41 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -97,9 +97,18 @@ CREATE TABLE `booking` (
 --
 
 INSERT INTO `booking` (`BOOK_ID`, `CAR_ID`, `EMAIL`, `BOOK_PLACE`, `DURATION`, `DESTINATION`, `BOOK_DATE`, `FROM_DT`, `TO_DT`, `AMOUNT`, `STATUS`, `PAYMENT_METHOD`, `CREATED_AT`) VALUES
-(1, 2, 'bst@bst.com', '', 0, '', '2025-06-01', '2025-06-01', '2025-06-03', 13500.00, 'Confirmed', 'Card', '2025-06-01 12:27:35'),
-(2, 4, 'bst@bst.com', '', 0, '', '2025-06-01', '2025-06-01', '2025-06-03', 18000.00, 'Confirmed', 'Card', '2025-06-01 12:58:51'),
-(3, 8, 'bst@bst.com', '', 0, '', '2025-06-01', '2025-06-25', '2025-06-27', 16500.00, 'Pending', 'Cash', '2025-06-01 13:10:30');
+(2, 4, 'bst@bst.com', '', 0, '', '2025-06-01', '2025-06-01', '2025-06-03', 18000.00, 'RETURNED', 'Card', '2025-06-01 12:58:51'),
+(3, 8, 'bst@bst.com', '', 0, '', '2025-06-01', '2025-06-25', '2025-06-27', 16500.00, 'RETURNED', 'Cash', '2025-06-01 13:10:30'),
+(4, 7, 'bst@bst.com', '', 0, '', '2025-06-01', '2025-06-02', '2025-06-03', 15000.00, 'RETURNED', 'Cash', '2025-06-01 13:20:38'),
+(5, 6, 'bst@bst.com', '', 0, '', '2025-06-01', '2025-06-02', '2025-06-03', 9600.00, 'RETURNED', 'Cash', '2025-06-01 13:22:44'),
+(7, 3, 'bst@bst.com', '', 0, '', '2025-06-01', '2025-06-02', '2025-06-06', 40000.00, 'RETURNED', 'Cash', '2025-06-01 13:44:30'),
+(8, 10, 'bst@bst.com', '', 0, '', '2025-06-01', '2025-06-02', '2025-06-05', 60000.00, 'RETURNED', 'UPI', '2025-06-01 21:33:35'),
+(9, 3, 'bst@bst.com', '', 0, '', '2025-06-06', '2025-06-13', '2025-06-18', 48000.00, 'APPROVED', 'Cash', '2025-06-06 08:44:30'),
+(10, 4, 'bst2@bst.com', '', 0, '', '2025-06-06', '2025-06-06', '2025-06-19', 84000.00, 'APPROVED', 'Cash', '2025-06-06 09:06:35'),
+(11, 10, 'bst2@bst.com', 'Charali', 2, 'RH', '2025-06-06', '2025-06-12', '2025-06-14', 45000.00, 'APPROVED', 'Cash', '2025-06-06 09:21:06'),
+(12, 9, 'bst2@bst.com', '', 0, '', '2025-06-06', '2025-06-07', '2025-06-08', 20000.00, 'Pending', 'Cash', '2025-06-06 11:10:12'),
+(13, 9, 'bst2@bst.com', '', 0, '', '2025-06-06', '2025-06-07', '2025-06-08', 20000.00, 'Pending', 'Card', '2025-06-06 11:10:42'),
+(14, 9, 'bst2@bst.com', '', 0, '', '2025-06-06', '2025-06-07', '2025-06-08', 20000.00, 'Pending', 'UPI', '2025-06-06 11:11:32');
 
 -- --------------------------------------------------------
 
@@ -127,14 +136,27 @@ CREATE TABLE `cars` (
 --
 
 INSERT INTO `cars` (`CAR_ID`, `CAR_NAME`, `CAR_IMG`, `FUEL_TYPE`, `CAPACITY`, `CAR_TYPE`, `TRANSMISSION`, `MODEL_YEAR`, `PRICE`, `AVAILABLE`, `ADDED_DATE`, `DESCRIPTION`) VALUES
-(1, 'Toyota Camry', 'camry.jpg', 'Petrol', 5, '0', 'Automatic', 2022, 5000.00, 'Y', '2025-06-01 11:51:10', 'Comfortable sedan with excellent fuel efficiency'),
-(2, 'Honda Civic', 'civic.jpg', 'Petrol', 5, '0', 'Manual', 2021, 4500.00, 'N', '2025-06-01 11:51:10', 'Reliable and sporty compact car'),
-(3, 'Ford Mustang', 'mustang.jpg', 'Petrol', 4, '0', 'Automatic', 2022, 8000.00, 'Y', '2025-06-01 11:51:10', 'Iconic American muscle car with powerful engine'),
+(2, 'Honda Civic', 'civic.jpg', 'Petrol', 5, '0', 'Manual', 2021, 4500.00, 'Y', '2025-06-01 11:51:10', 'Reliable and sporty compact car'),
+(3, 'Ford Mustang', 'mustang.jpg', 'Petrol', 4, '0', 'Automatic', 2022, 8000.00, 'N', '2025-06-01 11:51:10', 'Iconic American muscle car with powerful engine'),
 (4, 'Hyundai Tucson', 'tucson.jpg', 'Diesel', 5, '0', 'Automatic', 2021, 6000.00, 'N', '2025-06-01 11:51:10', 'Compact SUV with modern features and comfort'),
-(5, 'Maruti Swift', 'swift.jpg', 'Petrol', 5, '0', 'Manual', 2020, 3500.00, 'Y', '2025-06-01 11:51:10', 'Economical hatchback with good handling'),
 (6, 'Tata Nexon', 'nexon.jpg', 'Diesel', 5, '0', 'Manual', 2021, 4800.00, 'Y', '2025-06-01 11:51:10', 'Compact SUV with excellent safety features'),
 (7, 'Mahindra Thar', 'thar.jpg', 'Diesel', 4, '0', 'Manual', 2021, 7500.00, 'Y', '2025-06-01 11:51:10', 'Off-road capable SUV with rugged design'),
-(8, 'Kia Seltos', 'seltos.jpg', 'Petrol', 5, '0', 'Automatic', 2022, 5500.00, 'N', '2025-06-01 11:51:10', 'Feature-rich compact SUV with premium feel');
+(8, 'Kia Seltos', 'seltos.jpg', 'Petrol', 5, '0', 'Automatic', 2022, 5500.00, 'Y', '2025-06-01 11:51:10', 'Feature-rich compact SUV with premium feel'),
+(9, 'Hyundai Venue	', 'IMG-683c3adef10189.95662091.jpg', 'Petrol', 5, '', '', 0, 10000.00, 'N', '2025-06-01 17:19:54', NULL),
+(10, 'Tesla Model 3	', 'IMG-683c3d83350171.62683238.jpg', 'Electric', 5, 'Sedan', 'Automatic', 2024, 15000.00, 'N', '2025-06-01 17:31:11', NULL),
+(11, 'Toyota Fortuner', 'IMG-68427137bcd919.67611002.jpg', 'Diesel', 7, 'SUV', 'Manual', 2022, 9500.00, 'Y', '2025-06-06 10:25:23', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dash`
+--
+
+CREATE TABLE `dash` (
+  `total_users` int(10) NOT NULL,
+  `total_vehicles` int(100) NOT NULL,
+  `total_bookings` int(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -161,7 +183,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`USER_ID`, `FNAME`, `LNAME`, `EMAIL`, `PHONE`, `ADDRESS`, `PASSWORD`, `LICENSE_NO`, `CREATION_DATE`, `IS_ADMIN`) VALUES
 (1, 'Admin', 'User', 'admin@example.com', '1234567890', '', '0192023a7bbd73250516f069df18b500', '', '2025-06-01 11:51:10', 'Y'),
-(2, 'bst', 'thakuri', 'bst@bst.com', '980569443', 'charali', '6527b7edd158a9d9568888a83a53c54e', 'bso9dk', '2025-06-01 12:06:39', 'N');
+(2, 'bst', 'thakuri', 'bst@bst.com', '980569443', 'charali', '6527b7edd158a9d9568888a83a53c54e', 'bso9dk', '2025-06-01 12:06:39', 'N'),
+(3, 'bst2', 'thakuri2', 'bst2@bst.com', '9809876787', 'charali', '6527b7edd158a9d9568888a83a53c54e', 'bhok89', '2025-06-06 09:06:05', 'N');
 
 --
 -- Indexes for dumped tables
@@ -199,19 +222,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `BOOK_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `BOOK_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `cars`
 --
 ALTER TABLE `cars`
-  MODIFY `CAR_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `CAR_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `USER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `USER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

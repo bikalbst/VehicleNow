@@ -228,8 +228,8 @@ $result_cars = mysqli_query($con, $query_cars);
         <nav class="menu">
             <ul>
                 <li><a href="admindash.php">Dashboard</a></li>
+                <li><a href="adminvehicle.php">Vehicles Management</a></li>
                 <li><a href="adminbook.php">Bookings</a></li>
-                <li><a href="adminvehicle.php">Vehicles</a></li>
                 <li><a href="adminusers.php">Users</a></li>
             </ul>
         </nav>

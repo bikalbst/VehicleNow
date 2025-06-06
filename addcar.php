@@ -6,7 +6,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Car - VehicleNow Admin</title>
+    <title>Add New Vehicle - VehicleNow Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -369,7 +369,7 @@ session_start();
 
     <div class="page-container">
         <div class="page-header">
-            <h1>Add New Car Details</h1>
+            <h1>Add New Vehicle Details</h1>
         </div>
         <a href="adminvehicle.php" class="btn-home"><i class="fas fa-arrow-left"></i> Back to Vehicle List</a>
 
@@ -436,7 +436,7 @@ session_start();
                 <input type="text" id="description" name="description" placeholder="Enter short description" ><br>
             </div>
 
-            <button type="submit" class="btn-submit" name="addcar">ADD CAR TO DATABASE</button>
+            <button type="submit" class="btn-submit" name="addcar">ADD VEHICLE TO DATABASE</button>
         </form>
     </div>
 
